@@ -46,4 +46,34 @@
     <bean id="persistenceExceptionTranslationPostProcessor"
           class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
+
+          <!-- DAO -->
+          <bean id="jeuDao" class="com.Esport.Dao.Impl.JeuDaoImpl">
+            <property name="entityManager" ref="entityManagerFactory"/>
+          </bean>
+          <bean id="tournoiDao" class="com.Esport.Dao.Impl.TournoiDaoImpl">
+            <property name="entityManager" ref="entityManagerFactory"/>
+          </bean>
+          <bean id="equipeDao" class="com.Esport.Dao.Impl.EquipeDaoImpl">
+            <property name="entityManager" ref="entityManagerFactory"/>
+          </bean>
+          <bean id="joueurDao" class="com.Esport.Dao.Impl.JoueurDaoImpl">
+            <property name="entityManager" ref="entityManagerFactory"/>
+          </bean>
+          <!-- REPOSITORY -->
+          <bean id="jeuRepository" class="com.Esport.Repository.Impl.JeuRepositoryImpl">
+            <property name="jeuDao" ref="jeuDao"/>
+          </bean>
+          <bean id="tournoiRepository" class="com.Esport.Repository.Impl.TournoiRepositoryImpl">
+            <property name="tournoiDao" ref="tournoiDao"/>
+          </bean>
+          <bean id="equipeRepository" class="com.Esport.Repository.Impl.EquipeRepositoryImpl">
+            <property name="equipeDao" ref="equipeDao"/>
+          </bean>
+          <bean id="joueurRepository" class="com.Esport.Repository.Impl.JoueurRepositoryImpl">
+            <property name="joueurDao" ref="joueurDao"/>
+          </bean>
+          
+
+          
 </beans>
