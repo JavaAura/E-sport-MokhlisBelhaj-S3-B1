@@ -8,14 +8,13 @@ import javax.persistence.EntityManager;
 
 import com.Esport.Dao.interfaces.JoueurDao;
 import com.Esport.Modele.Joueur;
-import com.Esport.Util.JpaUtil;
+import com.Esport.Util.LoggerUtil;
 
 public class JoueurDaoImpl implements JoueurDao {
 
     private EntityManager entityManager;        
-
-    public JoueurDaoImpl() {
-        this.entityManager = JpaUtil.getEntityManager();
+    public JoueurDaoImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -23,7 +22,7 @@ public class JoueurDaoImpl implements JoueurDao {
         try {
             return entityManager.createQuery("SELECT j FROM Joueur j", Joueur.class).getResultList();
         } catch (Exception e) {
-            e.printStackTrace();
+            LoggerUtil.error("Error in findAll: " + e.getMessage());
             return new ArrayList<>();
         }
     }
@@ -33,7 +32,7 @@ public class JoueurDaoImpl implements JoueurDao {
         try {
             return Optional.ofNullable(entityManager.find(Joueur.class, id));
         } catch (Exception e) {
-            e.printStackTrace();
+            LoggerUtil.error("Error in findById: " + e.getMessage());
             return Optional.empty();
         }
     }
@@ -43,7 +42,7 @@ public class JoueurDaoImpl implements JoueurDao {
             entityManager.persist(joueur);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LoggerUtil.error("Error in create: " + e.getMessage());
             return false;
         }
     }
@@ -54,7 +53,7 @@ public class JoueurDaoImpl implements JoueurDao {
             entityManager.merge(joueur);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LoggerUtil.error("Error in update: " + e.getMessage());
             return false;
         }
     }
@@ -65,7 +64,7 @@ public class JoueurDaoImpl implements JoueurDao {
             entityManager.remove(entityManager.find(Joueur.class, id));
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LoggerUtil.error("Error in delete: " + e.getMessage());
             return false;
         }
     }

@@ -8,14 +8,13 @@ import javax.persistence.EntityManager;
 
 import com.Esport.Dao.interfaces.EquipeDao;
 import com.Esport.Modele.Equipe;
-import com.Esport.Util.JpaUtil;
+import com.Esport.Util.LoggerUtil;
 
 public class EquipeDaoImpl implements EquipeDao {
 
     private EntityManager entityManager;
-
-    public EquipeDaoImpl() {
-        this.entityManager = JpaUtil.getEntityManager();
+    public EquipeDaoImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -23,8 +22,7 @@ public class EquipeDaoImpl implements EquipeDao {
         try {
             return entityManager.createQuery("SELECT e FROM Equipe e", Equipe.class).getResultList();
         } catch (Exception e) {
-            // Log the exception
-            e.printStackTrace();
+            LoggerUtil.error("Error in findAll: " + e.getMessage());
             // Return an empty list or throw a custom exception
             return new ArrayList<>();
         }
@@ -35,7 +33,7 @@ public class EquipeDaoImpl implements EquipeDao {
         try {
             return Optional.ofNullable(entityManager.find(Equipe.class, id));
         } catch (Exception e) {
-            e.printStackTrace();
+            LoggerUtil.error("Error in findById: " + e.getMessage());
             return Optional.empty();
         }
     }
@@ -46,7 +44,7 @@ public class EquipeDaoImpl implements EquipeDao {
             entityManager.persist(equipe);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LoggerUtil.error("Error in create: " + e.getMessage());
             return false;
         }
     }
@@ -57,7 +55,7 @@ public class EquipeDaoImpl implements EquipeDao {
             entityManager.merge(equipe);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LoggerUtil.error("Error in update: " + e.getMessage());
             return false;
         }
     }
@@ -68,7 +66,7 @@ public class EquipeDaoImpl implements EquipeDao {
             entityManager.remove(entityManager.find(Equipe.class, id));
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LoggerUtil.error("Error in delete: " + e.getMessage());
             return false;
         }
     }

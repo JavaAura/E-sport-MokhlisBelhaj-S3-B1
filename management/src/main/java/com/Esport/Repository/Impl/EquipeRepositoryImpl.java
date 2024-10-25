@@ -16,12 +16,10 @@ public class EquipeRepositoryImpl implements EquipeRepository {
 
     private EntityManager entityManager;
     private EquipeDao equipeDao;
-    private LoggerUtil loggerUtil;
 
     public EquipeRepositoryImpl(EntityManager entityManager, EquipeDaoImpl equipeDao) {
         this.entityManager = entityManager;
         this.equipeDao = equipeDao;
-        this.loggerUtil = new LoggerUtil(EquipeRepositoryImpl.class);
     }
 
     @Override
@@ -59,7 +57,7 @@ public class EquipeRepositoryImpl implements EquipeRepository {
             entityManager.getTransaction().commit();
             return true;
         } catch (Exception e) {
-            loggerUtil.error("Error adding joueur to equipe", e);
+            LoggerUtil.error("Error adding joueur to equipe: " + e.getMessage());
             return false;
         }
     }
@@ -74,7 +72,7 @@ public class EquipeRepositoryImpl implements EquipeRepository {
             entityManager.getTransaction().commit();
             return true;
         } catch (Exception e) {
-            loggerUtil.error("Error removing joueur from equipe", e);
+            LoggerUtil.error("Error removing joueur from equipe: " + e.getMessage());
             return false;
         }
     }

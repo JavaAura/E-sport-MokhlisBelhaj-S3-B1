@@ -6,15 +6,14 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import com.Esport.Dao.interfaces.JeuDao;
 import com.Esport.Modele.Jeu;
-import com.Esport.Util.JpaUtil;
+import com.Esport.Util.LoggerUtil;
 
 
 public class JeuDaoImpl implements JeuDao {
 
     private EntityManager entityManager;
-
-    public JeuDaoImpl() {
-        this.entityManager = JpaUtil.getEntityManager();
+    public JeuDaoImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -22,7 +21,7 @@ public class JeuDaoImpl implements JeuDao {
         try {
             return entityManager.createQuery("SELECT j FROM Jeu j", Jeu.class).getResultList();
         } catch (Exception e) {
-            System.err.println("Error in findAll: " + e.getMessage());
+            LoggerUtil.error("Error in findAll: " + e.getMessage());
             return null;
         }
     }
@@ -32,7 +31,7 @@ public class JeuDaoImpl implements JeuDao {
         try {
             return Optional.ofNullable(entityManager.find(Jeu.class, id));
         } catch (Exception e) {
-            System.err.println("Error in findById: " + e.getMessage());
+            LoggerUtil.error("Error in findById: " + e.getMessage());
             return Optional.empty();
         }
     }
@@ -45,7 +44,7 @@ public class JeuDaoImpl implements JeuDao {
             entityManager.getTransaction().commit();
             return true;
         } catch (Exception e) {
-            System.err.println("Error in create: " + e.getMessage());
+            LoggerUtil.error("Error in create: " + e.getMessage());
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
             }
@@ -61,7 +60,7 @@ public class JeuDaoImpl implements JeuDao {
             entityManager.getTransaction().commit();
             return true;
         } catch (Exception e) {
-            System.err.println("Error in update: " + e.getMessage());
+            LoggerUtil.error("Error in update: " + e.getMessage());
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
             }
@@ -83,7 +82,7 @@ public class JeuDaoImpl implements JeuDao {
                 return false;
             }
         } catch (Exception e) {
-            System.err.println("Error in delete: " + e.getMessage());
+            LoggerUtil.error("Error in delete: " + e.getMessage());
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
             }

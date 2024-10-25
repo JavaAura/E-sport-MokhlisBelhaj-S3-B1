@@ -3,17 +3,16 @@ package com.Esport.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.Esport.Repository.Impl.EquipeRepositoryImpl;
 
 public class LoggerUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(LoggerUtil.class);
 
-    public LoggerUtil(Class<EquipeRepositoryImpl> class1) {
-        
-	}
+    private LoggerUtil() {
+        // Private constructor to prevent instantiation
+    }
 
-	public static void info(String message) {
+    public static void info(String message) {
         logger.info(message);
     }
 

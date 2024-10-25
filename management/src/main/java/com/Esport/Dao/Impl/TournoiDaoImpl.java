@@ -3,18 +3,19 @@ package com.Esport.Dao.Impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.EntityManager;
 
 import com.Esport.Dao.interfaces.TournoiDao;
+import com.Esport.Modele.Equipe;
 import com.Esport.Modele.Tournoi;
+import com.Esport.Util.LoggerUtil;
 
 public class TournoiDaoImpl implements TournoiDao {
 
-    private LoggerUtil loggerUtil;
     private EntityManager entityManager;
 
     public TournoiDaoImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
-        this.loggerUtil = new LoggerUtil();
     }
 
     @Override
@@ -22,7 +23,7 @@ public class TournoiDaoImpl implements TournoiDao {
         try {
             return entityManager.createQuery("SELECT t FROM Tournoi t", Tournoi.class).getResultList();
         } catch (Exception e) {
-            loggerUtil.error("Error finding all tournois: " + e.getMessage());
+            LoggerUtil.error("Error finding all tournois: " + e.getMessage());
             return new ArrayList<>();
         }
     }
@@ -32,7 +33,7 @@ public class TournoiDaoImpl implements TournoiDao {
            try {
             return Optional.ofNullable(entityManager.find(Tournoi.class, id));
         } catch (Exception e) {
-            loggerUtil.error("Error finding tournoi by id: " + e.getMessage());
+            LoggerUtil.error("Error finding tournoi by id: " + e.getMessage());
             return Optional.empty();
         }
     }
@@ -43,7 +44,7 @@ public class TournoiDaoImpl implements TournoiDao {
             entityManager.persist(tournoi);
             return true;
         } catch (Exception e) {
-            loggerUtil.error("Error creating tournoi: " + e.getMessage());
+            LoggerUtil.error("Error creating tournoi: " + e.getMessage());
             return false;
         }
     }
@@ -54,7 +55,7 @@ public class TournoiDaoImpl implements TournoiDao {
             entityManager.merge(tournoi);
             return true;
         } catch (Exception e) {
-            loggerUtil.error("Error updating tournoi: " + e.getMessage());
+            LoggerUtil.error("Error updating tournoi: " + e.getMessage());
             return false;
         }
     }
@@ -69,7 +70,7 @@ public class TournoiDaoImpl implements TournoiDao {
             }
             return false;
         } catch (Exception e) {
-            loggerUtil.error("Error deleting tournoi: " + e.getMessage());
+            LoggerUtil.error("Error deleting tournoi: " + e.getMessage());
             return false;
         }
     }
@@ -82,7 +83,7 @@ public class TournoiDaoImpl implements TournoiDao {
             tournoi.getEquipes().add(equipe);
             return true;
         } catch (Exception e) {
-            loggerUtil.error("Error adding equipe to tournoi: " + e.getMessage());
+            LoggerUtil.error("Error adding equipe to tournoi: " + e.getMessage());
             return false;
         }
     }
@@ -95,7 +96,7 @@ public class TournoiDaoImpl implements TournoiDao {
             tournoi.getEquipes().remove(equipe);
             return true;
         } catch (Exception e) {
-            loggerUtil.error("Error removing equipe from tournoi: " + e.getMessage());
+            LoggerUtil.error("Error removing equipe from tournoi: " + e.getMessage());
             return false;
         }
     }
