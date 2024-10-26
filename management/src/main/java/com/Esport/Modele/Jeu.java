@@ -7,7 +7,8 @@ import javax.validation.constraints.*;
 
 import com.Esport.Modele.Enum.JeuDifficulte;
 
-
+@Entity
+@Table(name = "jeu")
 public class Jeu {
 
 	@Id

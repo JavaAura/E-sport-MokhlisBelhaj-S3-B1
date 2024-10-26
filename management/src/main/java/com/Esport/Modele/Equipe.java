@@ -5,6 +5,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 @Entity
+@Table(name = "equipe")
 public class Equipe {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

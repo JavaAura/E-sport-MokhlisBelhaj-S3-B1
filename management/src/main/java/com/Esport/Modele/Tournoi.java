@@ -9,6 +9,7 @@ import javax.validation.constraints.*;
 import com.Esport.Modele.Enum.StatutTournoi;
 
 @Entity
+@Table(name = "tournoi")
 public class Tournoi {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

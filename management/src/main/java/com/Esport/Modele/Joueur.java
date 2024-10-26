@@ -1,15 +1,19 @@
 package com.Esport.Modele;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Max;
 
+@Entity
+@Table(name = "joueur")
 public class Joueur {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +27,8 @@ public class Joueur {
 	@Max(value = 50, message = "L'âge maximum est de 50 ans")
 	private int age;
 
-	@ManyToOne
-	@JoinColumn(name = "equipe_id")
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "equipe_id", nullable = true)
 	private Equipe equipe;
 
 	// constructeur with all attributes

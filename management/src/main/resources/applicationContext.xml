@@ -2,12 +2,16 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context
-                           http://www.springframework.org/schema/context/spring-context.xsd">
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <context:component-scan base-package="com.Esport"/>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <!-- DataSource Configuration -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -20,7 +24,7 @@
     <!-- EntityManagerFactory Configuration -->
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value="com.Esport.model"/>
+        <property name="packagesToScan" value="com.Esport.Modele"/>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
         </property>
@@ -28,52 +32,85 @@
             <props>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
-                <prop key="hibernate.validator.apply_to_ddl">true</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
             </props>
         </property>
     </bean>
 
-    <!-- TransactionManager Configuration -->
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <bean id="entityManager" class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-    <!-- Enable declarative transaction management -->
-    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
+    <!-- TransactionManager Configuration
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean> -->
 
     <bean id="persistenceExceptionTranslationPostProcessor"
           class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
+    <!-- DAO -->
+    <bean id="JeuDao" class="com.Esport.Dao.Impl.JeuDaoImpl">
+        <constructor-arg ref="entityManager"/>
+    </bean>
+    <bean id="TournoiDao" class="com.Esport.Dao.Impl.TournoiDaoImpl">
+        <constructor-arg ref="entityManager"/>
+    </bean>
+    <bean id="EquipeDao" class="com.Esport.Dao.Impl.EquipeDaoImpl">
+        <constructor-arg ref="entityManager"/>
+    </bean>
+    <bean id="JoueurDao" class="com.Esport.Dao.Impl.JoueurDaoImpl">
+        <constructor-arg ref="entityManager"/>
+    </bean>
 
-          <!-- DAO -->
-          <bean id="jeuDao" class="com.Esport.Dao.Impl.JeuDaoImpl">
-            <property name="entityManager" ref="entityManagerFactory"/>
-          </bean>
-          <bean id="tournoiDao" class="com.Esport.Dao.Impl.TournoiDaoImpl">
-            <property name="entityManager" ref="entityManagerFactory"/>
-          </bean>
-          <bean id="equipeDao" class="com.Esport.Dao.Impl.EquipeDaoImpl">
-            <property name="entityManager" ref="entityManagerFactory"/>
-          </bean>
-          <bean id="joueurDao" class="com.Esport.Dao.Impl.JoueurDaoImpl">
-            <property name="entityManager" ref="entityManagerFactory"/>
-          </bean>
-          <!-- REPOSITORY -->
-          <bean id="jeuRepository" class="com.Esport.Repository.Impl.JeuRepositoryImpl">
-            <property name="jeuDao" ref="jeuDao"/>
-          </bean>
-          <bean id="tournoiRepository" class="com.Esport.Repository.Impl.TournoiRepositoryImpl">
-            <property name="tournoiDao" ref="tournoiDao"/>
-          </bean>
-          <bean id="equipeRepository" class="com.Esport.Repository.Impl.EquipeRepositoryImpl">
-            <property name="equipeDao" ref="equipeDao"/>
-          </bean>
-          <bean id="joueurRepository" class="com.Esport.Repository.Impl.JoueurRepositoryImpl">
-            <property name="joueurDao" ref="joueurDao"/>
-          </bean>
-          
+    <!-- Repository -->
+    <bean id="JeuRepository" class="com.Esport.Repository.Impl.JeuRepositoryImpl">
+        <constructor-arg ref="JeuDao"/>
+    </bean>
+    <!-- TournoiRepository implementations -->
+    <bean id="tournoiRepositoryImpl" class="com.Esport.Repository.Impl.TournoiRepositoryImpl">
+        <constructor-arg ref="TournoiDao"/>
+    </bean>
+    <bean id="tournoiRepositoryExtension" class="com.Esport.Repository.Impl.TournoiRepositoryExtension">
+        <constructor-arg ref="tournoiRepositoryImpl"/>
+    </bean>
+    <bean id="EquipeRepository" class="com.Esport.Repository.Impl.EquipeRepositoryImpl">
+        <constructor-arg ref="EquipeDao"/>
+    </bean>
+    <bean id="JoueurRepository" class="com.Esport.Repository.Impl.JoueurRepositoryImpl">
+        <constructor-arg ref="JoueurDao"/>
+    </bean>
 
-          
+    <!-- Service -->
+    <bean id="JeuService" class="com.Esport.Service.Impl.JeuServiceImpl">
+        <constructor-arg ref="JeuRepository"/>
+    </bean>
+    <bean id="TournoiService" class="com.Esport.Service.Impl.TournoiServiceImpl">
+        <constructor-arg ref="TournoiRepository"/>
+    </bean>
+    <bean id="EquipeService" class="com.Esport.Service.Impl.EquipeServiceImpl">
+        <constructor-arg name="equipeRepository" ref="EquipeRepository"/>
+        <constructor-arg name="joueurRepository" ref="JoueurRepository"/>
+    </bean>
+    <bean id="JoueurService" class="com.Esport.Service.Impl.JoueurServiceImpl">
+        <constructor-arg ref="JoueurRepository"/>
+    </bean>
+
+   
+
+    <!-- 
+    To use tournoiRepositoryImpl, change the line below to:
+    <alias name="tournoiRepositoryImpl" alias="tournoiRepository"/>
+    
+    To use tournoiRepositoryExtension, keep it as:
+    <alias name="tournoiRepositoryExtension" alias="tournoiRepository"/>
+    -->
+    <alias name="tournoiRepositoryImpl" alias="TournoiRepository"/>
+    <!-- To use TournoiRepositoryExtension, comment out the line above and uncomment the line below -->
+    <!-- <alias name="tournoiRepositoryExtension" alias="TournoiRepository"/> -->
+
+    <!-- Menu Principal -->
+    <bean id="menuPrincipal" class="com.Esport.presentation.Menu.MenuPrincipal"/>
+
 </beans>
