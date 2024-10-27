@@ -13,7 +13,6 @@ public interface TournoiService {
     public Optional<Tournoi> findById(Long id);
     public boolean create(Tournoi tournoi);
     public boolean update(Tournoi tournoi);
-    public boolean delete(Long id);
     public boolean addEquipeToTournoi(Long tournoiId, Long equipeId);
     public boolean removeEquipeFromTournoi(Long tournoiId, Long equipeId);
 }

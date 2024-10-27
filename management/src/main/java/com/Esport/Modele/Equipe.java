@@ -15,28 +15,31 @@ public class Equipe {
 	@Size(max = 100, message = "Le nom de l'équipe ne peut pas dépasser 100 caractères")
 	private String nom;
 
-	@Min(value = 1, message = "Le classement doit être au moins 1")
+	@Column(name = "classement")
+	@Min(value = 0, message = "Le classement doit être au moins 0")
 	private int classement;
 
 	@OneToMany(mappedBy = "equipe")
 	private List<Joueur> joueurs;
 
-	@ManyToMany(mappedBy = "equipes")
-	private List<Tournoi> tournois;
+	@ManyToOne
+	@JoinColumn(name = "tournoi_id")
+	private Tournoi tournoi;
 
 	// constructeur with all attributes
-	public Equipe(Long id, String nom, int classement, List<Joueur> joueurs, List<Tournoi> tournois) {
+	public Equipe(Long id, String nom, int classement, List<Joueur> joueurs, Tournoi tournoi) {
 		this.id = id;
 		this.nom = nom;
 		this.classement = classement;
 		this.joueurs = joueurs;
-		this.tournois = tournois;
+		this.tournoi = tournoi;
 	}
 
 		// constructeur without id
-	public Equipe(String nom, int classement) {
+	public Equipe(String nom, int classement, Tournoi tournoi) {
 		this.nom = nom;
 		this.classement = classement;
+		this.tournoi = tournoi;
 	}
 
 	// empty constructeur
@@ -76,12 +79,12 @@ public class Equipe {
 		this.joueurs = joueurs;
 	}
 
-	public List<Tournoi> getTournois() {
-		return tournois;
+	public Tournoi getTournoi() {
+		return tournoi;
 	}
 
-	public void setTournois(List<Tournoi> tournois) {
-		this.tournois = tournois;
+	public void setTournoi(Tournoi tournoi) {
+		this.tournoi = tournoi;
 	}
 
 }

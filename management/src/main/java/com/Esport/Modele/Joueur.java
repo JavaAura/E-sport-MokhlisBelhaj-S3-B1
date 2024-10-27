@@ -42,7 +42,6 @@ public class Joueur {
 	public Joueur(String pseudo, int age, Equipe equipe) {
 		this.pseudo = pseudo;
 		this.age = age;
-		this.equipe = equipe;
 	}
 
 	// empty constructeur

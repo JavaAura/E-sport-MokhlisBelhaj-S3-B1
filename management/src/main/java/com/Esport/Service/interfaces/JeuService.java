@@ -11,6 +11,5 @@ public interface JeuService {
     public Optional<Jeu> findById(Long id);
     public boolean create(Jeu jeu);
     public boolean update(Jeu jeu);
-    public boolean delete(Long id);
 
 }

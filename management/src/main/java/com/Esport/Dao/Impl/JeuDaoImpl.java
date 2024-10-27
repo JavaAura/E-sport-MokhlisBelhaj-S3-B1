@@ -4,91 +4,86 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import com.Esport.Dao.interfaces.JeuDao;
 import com.Esport.Modele.Jeu;
+import com.Esport.Util.JpaUtil;
 import com.Esport.Util.LoggerUtil;
 
 
 public class JeuDaoImpl implements JeuDao {
 
-    private EntityManager entityManager;
-    public JeuDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public JeuDaoImpl() {
     }
 
     @Override
     public List<Jeu> findAll() {
+        EntityManager em = JpaUtil.getEntityManager();
         try {
-            return entityManager.createQuery("SELECT j FROM Jeu j", Jeu.class).getResultList();
+            return em.createQuery("SELECT j FROM Jeu j", Jeu.class).getResultList();
         } catch (Exception e) {
             LoggerUtil.error("Error in findAll: " + e.getMessage());
             return null;
+        } finally {
+            JpaUtil.closeEntityManager(em);
         }
     }
 
     @Override
     public Optional<Jeu> findById(Long id) {
+        EntityManager em = JpaUtil.getEntityManager();
         try {
-            return Optional.ofNullable(entityManager.find(Jeu.class, id));
+            return Optional.ofNullable(em.find(Jeu.class, id));
         } catch (Exception e) {
             LoggerUtil.error("Error in findById: " + e.getMessage());
             return Optional.empty();
+        } finally {
+            JpaUtil.closeEntityManager(em);
         }
     }
 
     @Override
     public boolean create(Jeu jeu) {
+        EntityManager em = JpaUtil.getEntityManager();
+        EntityTransaction tx = null;
         try {
-            entityManager.getTransaction().begin();
-            entityManager.persist(jeu);
-            entityManager.getTransaction().commit();
+            tx = em.getTransaction();
+            tx.begin();
+            em.persist(jeu);
+            tx.commit();
             return true;
         } catch (Exception e) {
-            LoggerUtil.error("Error in create: " + e.getMessage());
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
+            LoggerUtil.error("Error creating Jeu: " + e.getMessage());
             return false;
+        } finally {
+            JpaUtil.closeEntityManager(em);
         }
     }
 
     @Override
     public boolean update(Jeu jeu) {
+        EntityManager em = JpaUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         try {
-            entityManager.getTransaction().begin();
-            entityManager.merge(jeu);
-            entityManager.getTransaction().commit();
+            tx.begin();
+            em.merge(jeu);
+            tx.commit();
             return true;
         } catch (Exception e) {
             LoggerUtil.error("Error in update: " + e.getMessage());
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
             return false;
+        } finally {
+            JpaUtil.closeEntityManager(em);
         }
     }
 
-    @Override
-    public boolean delete(Long id) {
-        try {
-            entityManager.getTransaction().begin();
-            Jeu jeu = entityManager.find(Jeu.class, id);
-            if (jeu != null) {
-                entityManager.remove(jeu);
-                entityManager.getTransaction().commit();
-                return true;
-            } else {
-                entityManager.getTransaction().rollback();
-                return false;
-            }
-        } catch (Exception e) {
-            LoggerUtil.error("Error in delete: " + e.getMessage());
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            return false;
-        }
-    }
+  
 
     
 

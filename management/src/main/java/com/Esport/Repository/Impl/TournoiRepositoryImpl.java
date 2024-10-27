@@ -44,26 +44,20 @@ public class TournoiRepositoryImpl implements TournoiRepository {
         return tournoiDao.update(tournoi);
     }
 
-    @Override
-    public boolean delete(Long id) {
-        return tournoiDao.delete(id);
-    }
 
-    @Override
-    public boolean addEquipe(Long idTournoi, Long idEquipe) {
-        return tournoiDao.addEquipe(idTournoi, idEquipe);
-    }
-
-    @Override
-    public boolean removeEquipe(Long idTournoi, Long idEquipe) {
-        return tournoiDao.removeEquipe(idTournoi, idEquipe);
-    }
+  
 
     public Duration callCalculateDureeEstimee(Tournoi tournoi) {
-        int nombreEquipes = tournoi.getEquipes().size();
-        int dureeMoyenneMatch = (int) tournoi.getJeu().getDureeMoyenneMatch().toMinutes();
-        int tempsPauseEntreMatchs = (int) tournoi.getTempsPauseEntreMatchs().toMinutes();
-        Duration dureeEstimee = Duration.ofMinutes((nombreEquipes * dureeMoyenneMatch) + tempsPauseEntreMatchs);
+    	int nombreEquipes;
+        if (tournoi.getEquipes() == null) {
+            nombreEquipes = 0;
+        } else {
+            nombreEquipes = tournoi.getEquipes().size();
+        }
+
+        int dureeMoyenneMatch = (int) tournoi.getJeu().getDureeMoyenneMatch().getSeconds();
+        int tempsPauseEntreMatchs = (int) tournoi.getTempsPauseEntreMatchs().getSeconds();
+        Duration dureeEstimee = Duration.ofSeconds((nombreEquipes * dureeMoyenneMatch) + tempsPauseEntreMatchs);
         return dureeEstimee;
     }
 }

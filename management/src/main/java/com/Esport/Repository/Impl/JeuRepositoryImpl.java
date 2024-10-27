@@ -35,10 +35,7 @@ public class JeuRepositoryImpl implements JeuRepository {
         return jeuDao.update(jeu);
     }
 
-    @Override
-    public boolean delete(Long id) {
-        return jeuDao.delete(id);
-    }
+    
 
 
 

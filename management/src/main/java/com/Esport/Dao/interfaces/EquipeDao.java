@@ -11,7 +11,6 @@ public interface EquipeDao {
     public Optional<Equipe> findById(Long id);
     public boolean create(Equipe equipe);
     public boolean update(Equipe equipe);
-    public boolean delete(Long id);
 
 
 }

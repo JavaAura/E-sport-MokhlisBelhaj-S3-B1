@@ -8,8 +8,7 @@ public interface JeuDao {
 
     List<Jeu> findAll();
     Optional<Jeu> findById(Long id);
-    boolean create(Jeu jeu);
+    boolean create(Jeu jeu); 
     boolean update(Jeu jeu);
-    boolean delete(Long id);
 
 }

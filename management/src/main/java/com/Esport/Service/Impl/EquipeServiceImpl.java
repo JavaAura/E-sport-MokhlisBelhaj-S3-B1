@@ -41,10 +41,7 @@ public class EquipeServiceImpl implements EquipeService  {
         return equipeRepository.update(equipe);
     }
 
-    @Override
-    public boolean delete(Long id) {
-        return equipeRepository.delete(id);
-    }
+ 
 
     @Override
     public boolean addJoueurToEquipe(Long equipeId, Long joueurId) {

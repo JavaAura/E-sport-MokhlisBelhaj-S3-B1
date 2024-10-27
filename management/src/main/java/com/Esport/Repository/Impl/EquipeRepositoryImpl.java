@@ -42,10 +42,7 @@ public class EquipeRepositoryImpl implements EquipeRepository {
         return equipeDao.update(equipe);
     }
 
-    @Override
-    public boolean delete(Long id) {
-        return equipeDao.delete(id);
-    }
+    
 
     @Override
     public boolean addJoueurToEquipe(Long equipeId, Long joueurId) {

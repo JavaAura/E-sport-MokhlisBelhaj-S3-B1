@@ -51,19 +51,10 @@
           class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
     <!-- DAO -->
-    <bean id="JeuDao" class="com.Esport.Dao.Impl.JeuDaoImpl">
-        <constructor-arg ref="entityManager"/>
-    </bean>
-    <bean id="TournoiDao" class="com.Esport.Dao.Impl.TournoiDaoImpl">
-        <constructor-arg ref="entityManager"/>
-    </bean>
-    <bean id="EquipeDao" class="com.Esport.Dao.Impl.EquipeDaoImpl">
-        <constructor-arg ref="entityManager"/>
-    </bean>
-    <bean id="JoueurDao" class="com.Esport.Dao.Impl.JoueurDaoImpl">
-        <constructor-arg ref="entityManager"/>
-    </bean>
-
+    <bean id="JeuDao" class="com.Esport.Dao.Impl.JeuDaoImpl"/>
+    <bean id="TournoiDao" class="com.Esport.Dao.Impl.TournoiDaoImpl"/>
+    <bean id="EquipeDao" class="com.Esport.Dao.Impl.EquipeDaoImpl"/>
+    <bean id="JoueurDao" class="com.Esport.Dao.Impl.JoueurDaoImpl"/>
     <!-- Repository -->
     <bean id="JeuRepository" class="com.Esport.Repository.Impl.JeuRepositoryImpl">
         <constructor-arg ref="JeuDao"/>
@@ -87,7 +78,8 @@
         <constructor-arg ref="JeuRepository"/>
     </bean>
     <bean id="TournoiService" class="com.Esport.Service.Impl.TournoiServiceImpl">
-        <constructor-arg ref="TournoiRepository"/>
+        <constructor-arg name="tournoiRepository" ref="TournoiRepository"/>
+        <constructor-arg name="equipeRepository" ref="EquipeRepository"/>
     </bean>
     <bean id="EquipeService" class="com.Esport.Service.Impl.EquipeServiceImpl">
         <constructor-arg name="equipeRepository" ref="EquipeRepository"/>
@@ -110,7 +102,37 @@
     <!-- To use TournoiRepositoryExtension, comment out the line above and uncomment the line below -->
     <!-- <alias name="tournoiRepositoryExtension" alias="TournoiRepository"/> -->
 
+
+
+
     <!-- Menu Principal -->
-    <bean id="menuPrincipal" class="com.Esport.presentation.Menu.MenuPrincipal"/>
+    <bean id="menuPrincipal" class="com.Esport.presentation.Menu.MenuPrincipal">
+        <constructor-arg ref="menuJeu"/>
+        <constructor-arg ref="menuTournoi"/>
+        <constructor-arg ref="menuEquipe"/>
+        <constructor-arg ref="menuJoueur"/>
+    </bean>
+    <!-- Menu Jeu -->
+    <bean id="menuJeu" class="com.Esport.presentation.Menu.MenuJeu">
+        <constructor-arg ref="JeuService"/>
+    </bean>
+
+    <!-- Menu Tournoi -->
+    <bean id="menuTournoi" class="com.Esport.presentation.Menu.MenuTournoi">
+        <constructor-arg ref="TournoiService"/>
+        <constructor-arg ref="JeuService"/>
+        <constructor-arg ref="EquipeService"/>
+    </bean>
+
+    <!-- Menu Equipe -->
+    <bean id="menuEquipe" class="com.Esport.presentation.Menu.MenuEquipe">
+        <constructor-arg ref="EquipeService"/>
+    </bean>
+
+    <!-- Menu Joueur -->
+    <bean id="menuJoueur" class="com.Esport.presentation.Menu.MenuJoueur">
+        <constructor-arg ref="JoueurService"/>
+    </bean>
+    
 
 </beans>
