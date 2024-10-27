@@ -10,7 +10,5 @@ public interface TournoiDao {
     public Optional<Tournoi> findById(Long id);
     public boolean create(Tournoi tournoi);
     public boolean update(Tournoi tournoi);
-    public boolean addEquipe(Long idTournoi, Long idEquipe);
-    public boolean removeEquipe(Long idTournoi, Long idEquipe);
-
+  
 }

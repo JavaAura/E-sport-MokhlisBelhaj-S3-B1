@@ -6,6 +6,7 @@ import com.Esport.Modele.Tournoi;
 import com.Esport.Util.LoggerUtil;
 import com.Esport.Util.JpaUtil;
 
+
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,26 @@ public class TournoiDaoImpl implements TournoiDao {
     public List<Tournoi> findAll() {
         EntityManager entityManager = JpaUtil.getEntityManager();
         try {
-            return entityManager.createQuery("SELECT t FROM Tournoi t", Tournoi.class).getResultList();
+            List<Tournoi> tournois = entityManager.createQuery(
+                "SELECT DISTINCT t FROM Tournoi t LEFT JOIN FETCH t.equipes", 
+                Tournoi.class)
+                .getResultList();
+
+            if (!tournois.isEmpty()) {
+                List<Equipe> allEquipes = new ArrayList<>();
+                for (Tournoi t : tournois) {
+                    allEquipes.addAll(t.getEquipes());
+                }
+                if (!allEquipes.isEmpty()) {
+                    entityManager.createQuery(
+                        "SELECT e FROM Equipe e LEFT JOIN FETCH e.joueurs WHERE e IN :equipes",
+                        Equipe.class)
+                        .setParameter("equipes", allEquipes)
+                        .getResultList();
+                }
+            }
+            
+            return tournois;
         } catch (Exception e) {
             LoggerUtil.error("Error finding all tournois: " + e.getMessage());
             return new ArrayList<>();
@@ -33,7 +53,21 @@ public class TournoiDaoImpl implements TournoiDao {
     public Optional<Tournoi> findById(Long id) {
         EntityManager entityManager = JpaUtil.getEntityManager();
         try {
-            return Optional.ofNullable(entityManager.find(Tournoi.class, id));
+            Tournoi tournoi = entityManager.createQuery(
+                "SELECT t FROM Tournoi t LEFT JOIN FETCH t.equipes WHERE t.id = :id", 
+                Tournoi.class)
+                .setParameter("id", id)
+                .getSingleResult();
+
+            if (tournoi != null) {
+                entityManager.createQuery(
+                    "SELECT e FROM Equipe e LEFT JOIN FETCH e.joueurs WHERE e IN :equipes",
+                    Equipe.class)
+                    .setParameter("equipes", tournoi.getEquipes())
+                    .getResultList();
+            }
+            
+            return Optional.ofNullable(tournoi);
         } catch (Exception e) {
             LoggerUtil.error("Error finding tournoi by id: " + e.getMessage());
             return Optional.empty();
@@ -78,39 +112,5 @@ public class TournoiDaoImpl implements TournoiDao {
         } finally {
             JpaUtil.closeEntityManager(entityManager);
         }
-    }
-
-   
-
-    @Override
-    public boolean addEquipe(Long idTournoi, Long idEquipe) {
-        EntityManager entityManager = JpaUtil.getEntityManager();
-        try {
-            Tournoi tournoi = entityManager.find(Tournoi.class, idTournoi);
-            Equipe equipe = entityManager.find(Equipe.class, idEquipe);
-            tournoi.getEquipes().add(equipe);
-            return true;
-        } catch (Exception e) {
-            LoggerUtil.error("Error adding equipe to tournoi: " + e.getMessage());
-            return false;
-        } finally {
-            JpaUtil.closeEntityManager(entityManager);
-        }
-    }
-
-    @Override
-    public boolean removeEquipe(Long idTournoi, Long idEquipe) {
-        EntityManager entityManager = JpaUtil.getEntityManager();
-        try {
-            Tournoi tournoi = entityManager.find(Tournoi.class, idTournoi);
-            Equipe equipe = entityManager.find(Equipe.class, idEquipe);
-            tournoi.getEquipes().remove(equipe);
-            return true;
-        } catch (Exception e) {
-            LoggerUtil.error("Error removing equipe from tournoi: " + e.getMessage());
-            return false;
-        } finally {
-            JpaUtil.closeEntityManager(entityManager);
-        }
-    }
+    }   
 }

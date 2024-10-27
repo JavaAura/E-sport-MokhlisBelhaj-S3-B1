@@ -48,29 +48,26 @@ public boolean update(Tournoi tournoi) {
 
 
 
-@Override
-public boolean addEquipe(Long idTournoi, Long idEquipe) {
-    return tournoiDao.addEquipe(idTournoi, idEquipe);
-}
-
-@Override
-public boolean removeEquipe(Long idTournoi, Long idEquipe) {
-    return tournoiDao.removeEquipe(idTournoi, idEquipe);
-}
 
 
 public Duration callCalculateDureeEstimee(Tournoi tournoi) {
-    int nombreEquipes = tournoi.getEquipes().size();
+    int nombreEquipes;
+    if (tournoi.getEquipes() == null) {
+        nombreEquipes = 0;
+    } else {
+        nombreEquipes = tournoi.getEquipes().size();
+    }
+
     int dureeMoyenneMatch =(int) tournoi.getJeu().getDureeMoyenneMatch().toMinutes(); 
     int difficultéJeu = Stream.of(JeuDifficulte.values())
         .filter(diff -> diff == tournoi.getJeu().getDifficulte())
         .mapToInt(diff -> diff.ordinal() + 1)
         .findFirst()
-        .orElse(1); // Default to 1 (FACILE) if not found
+        .orElse(1); 
 
-    int tempsPauseEntreMatchs = (int) tournoi.getTempsPauseEntreMatchs().toMinutes();
-    int tempsCeromonie = (int) tournoi.getTempsCeremonie().toMinutes();
-    Duration dureeEstimee = Duration.ofMinutes((nombreEquipes * dureeMoyenneMatch * difficultéJeu) + tempsPauseEntreMatchs + tempsCeromonie);
+    int tempsPauseEntreMatchs = (int) tournoi.getTempsPauseEntreMatchs().getSeconds();
+    int tempsCeromonie = (int) tournoi.getTempsCeremonie().getSeconds();
+    Duration dureeEstimee = Duration.ofSeconds((nombreEquipes * dureeMoyenneMatch * difficultéJeu) + tempsPauseEntreMatchs + tempsCeromonie);
         return dureeEstimee;
     }
 

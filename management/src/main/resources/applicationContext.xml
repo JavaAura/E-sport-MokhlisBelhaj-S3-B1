@@ -78,7 +78,8 @@
         <constructor-arg ref="JeuRepository"/>
     </bean>
     <bean id="TournoiService" class="com.Esport.Service.Impl.TournoiServiceImpl">
-        <constructor-arg ref="TournoiRepository"/>
+        <constructor-arg name="tournoiRepository" ref="TournoiRepository"/>
+        <constructor-arg name="equipeRepository" ref="EquipeRepository"/>
     </bean>
     <bean id="EquipeService" class="com.Esport.Service.Impl.EquipeServiceImpl">
         <constructor-arg name="equipeRepository" ref="EquipeRepository"/>
@@ -119,6 +120,8 @@
     <!-- Menu Tournoi -->
     <bean id="menuTournoi" class="com.Esport.presentation.Menu.MenuTournoi">
         <constructor-arg ref="TournoiService"/>
+        <constructor-arg ref="JeuService"/>
+        <constructor-arg ref="EquipeService"/>
     </bean>
 
     <!-- Menu Equipe -->

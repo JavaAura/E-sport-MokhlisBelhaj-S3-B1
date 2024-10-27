@@ -3,6 +3,7 @@ package com.Esport.Util;
 import java.util.Scanner;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
+import java.time.LocalDate;
 
 
 
@@ -105,6 +106,27 @@ public class InputValidator {
             } catch (NumberFormatException e) {
                 LoggerUtil.error("Invalid input: Not a valid integer", e);
                 LoggerUtil.info("Please enter a valid integer.");
+            }
+        }
+    }
+
+    public static LocalDate validateDateInput() {
+        while (true) {
+            LoggerUtil.info("Enter a date (YYYY-MM-DD): ");
+            String input = scanner.nextLine().trim();
+            
+            try {
+                LocalDate date = LocalDate.parse(input);
+                
+                // Ensure date is not in the past
+                if (date.isBefore(LocalDate.now())) {
+                    LoggerUtil.error("Invalid input: Date cannot be in the past");
+                    continue;
+                }
+                
+                return date;
+            } catch (DateTimeParseException e) {
+                LoggerUtil.error("Invalid input: Please enter a valid date in YYYY-MM-DD format", e);
             }
         }
     }
