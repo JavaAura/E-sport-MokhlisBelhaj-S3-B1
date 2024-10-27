@@ -64,7 +64,7 @@
         <constructor-arg ref="TournoiDao"/>
     </bean>
     <bean id="tournoiRepositoryExtension" class="com.Esport.Repository.Impl.TournoiRepositoryExtension">
-        <constructor-arg ref="tournoiRepositoryImpl"/>
+        <constructor-arg ref="TournoiDao"/>
     </bean>
     <bean id="EquipeRepository" class="com.Esport.Repository.Impl.EquipeRepositoryImpl">
         <constructor-arg ref="EquipeDao"/>
@@ -91,17 +91,10 @@
 
    
 
-    <!-- 
-    To use tournoiRepositoryImpl, change the line below to:
-    <alias name="tournoiRepositoryImpl" alias="tournoiRepository"/>
-    
-    To use tournoiRepositoryExtension, keep it as:
-    <alias name="tournoiRepositoryExtension" alias="tournoiRepository"/>
-    -->
+  
     <alias name="tournoiRepositoryImpl" alias="TournoiRepository"/>
-    <!-- To use TournoiRepositoryExtension, comment out the line above and uncomment the line below -->
     <!-- <alias name="tournoiRepositoryExtension" alias="TournoiRepository"/> -->
-
+  
 
 
 

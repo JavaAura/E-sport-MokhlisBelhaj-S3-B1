@@ -1,8 +1,11 @@
 package com.Esport.Repository.Impl;
 
+import com.Esport.Dao.Impl.TournoiDaoImpl;
+import com.Esport.Dao.interfaces.TournoiDao;
 import com.Esport.Modele.Tournoi;
 import com.Esport.Modele.Enum.JeuDifficulte;
 import com.Esport.Repository.interfaces.TournoiRepository;
+import com.Esport.Util.LoggerUtil;
 
 import java.time.Duration;
 
@@ -17,11 +20,12 @@ import java.util.stream.Stream;
 
 public class TournoiRepositoryExtension implements TournoiRepository  {
     
-    private final TournoiRepositoryImpl tournoiDao;
+	  private TournoiDao tournoiDao;
+	    
 
-    public TournoiRepositoryExtension(TournoiRepositoryImpl tournoiDao) {
-        this.tournoiDao = tournoiDao;
-    }
+	    public TournoiRepositoryExtension(TournoiDaoImpl tournoiDao) {
+	        this.tournoiDao = tournoiDao;
+	    }
 
 @Override
 public List<Tournoi> findAll() {
@@ -35,10 +39,11 @@ public Optional<Tournoi> findById(Long id) {
 }
 
 @Override
-public boolean create(Tournoi tournoi) {
-    tournoi.setDureeEstimee(callCalculateDureeEstimee(tournoi));
-    return tournoiDao.create(tournoi);
-}
+    public boolean create(Tournoi tournoi) {
+        Duration dureeEstimee = callCalculateDureeEstimee(tournoi);
+        tournoi.setDureeEstimee(dureeEstimee);
+        return tournoiDao.create(tournoi);
+    }
 
 @Override
 public boolean update(Tournoi tournoi) {
@@ -51,6 +56,7 @@ public boolean update(Tournoi tournoi) {
 
 
 public Duration callCalculateDureeEstimee(Tournoi tournoi) {
+    LoggerUtil.info("Calcule de la durée estimée avancée");
     int nombreEquipes;
     if (tournoi.getEquipes() == null) {
         nombreEquipes = 0;

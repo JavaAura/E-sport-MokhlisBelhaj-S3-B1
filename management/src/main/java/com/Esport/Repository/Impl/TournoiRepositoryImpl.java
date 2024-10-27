@@ -8,6 +8,7 @@ import com.Esport.Dao.Impl.TournoiDaoImpl;
 import com.Esport.Dao.interfaces.TournoiDao;
 import com.Esport.Modele.Tournoi;
 import com.Esport.Repository.interfaces.TournoiRepository;
+import com.Esport.Util.LoggerUtil;
 
 
 public class TournoiRepositoryImpl implements TournoiRepository {
@@ -48,6 +49,8 @@ public class TournoiRepositoryImpl implements TournoiRepository {
   
 
     public Duration callCalculateDureeEstimee(Tournoi tournoi) {
+
+        LoggerUtil.info("Calcule de base de la durée estimée   ");
     	int nombreEquipes;
         if (tournoi.getEquipes() == null) {
             nombreEquipes = 0;
