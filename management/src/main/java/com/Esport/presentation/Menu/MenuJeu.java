@@ -28,7 +28,7 @@ public class MenuJeu {
 			LoggerUtil.info("4. Modifier un jeu");
 			LoggerUtil.info("5. Retour au menu principal");
 			LoggerUtil.info("Choisissez une option : ");
-			int choice = InputValidator.validateMenuChoice(1, 6);
+			int choice = InputValidator.validateMenuChoice(1, 5);
 
 			switch (choice) {
 			case 1:
