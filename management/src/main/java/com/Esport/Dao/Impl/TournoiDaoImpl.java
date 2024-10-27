@@ -80,29 +80,7 @@ public class TournoiDaoImpl implements TournoiDao {
         }
     }
 
-    @Override
-    public boolean delete(Long id) {
-        EntityManager entityManager = JpaUtil.getEntityManager();
-        try {   
-            entityManager.getTransaction().begin();
-            Tournoi tournoi = entityManager.find(Tournoi.class, id);
-            if (tournoi != null) {
-                entityManager.remove(tournoi);
-                entityManager.getTransaction().commit();
-                return true;
-            }
-            entityManager.getTransaction().rollback();
-            return false;
-        } catch (Exception e) {
-            LoggerUtil.error("Error deleting tournoi: " + e.getMessage());
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            return false;
-        } finally {
-            JpaUtil.closeEntityManager(entityManager);
-        }
-    }
+   
 
     @Override
     public boolean addEquipe(Long idTournoi, Long idEquipe) {

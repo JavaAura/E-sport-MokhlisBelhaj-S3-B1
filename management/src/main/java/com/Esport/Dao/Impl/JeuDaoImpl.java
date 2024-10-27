@@ -83,31 +83,7 @@ public class JeuDaoImpl implements JeuDao {
         }
     }
 
-    @Override
-    public boolean delete(Long id) {
-        EntityManager em = JpaUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            Jeu jeu = em.find(Jeu.class, id);
-            if (jeu != null) {
-                em.remove(jeu);
-                tx.commit();
-                return true;
-            } else {
-                tx.rollback();
-                return false;
-            }
-        } catch (Exception e) {
-            LoggerUtil.error("Error in delete: " + e.getMessage());
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            return false;
-        } finally {
-            JpaUtil.closeEntityManager(em);
-        }
-    }
+  
 
     
 

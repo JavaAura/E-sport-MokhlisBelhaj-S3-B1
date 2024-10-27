@@ -44,10 +44,6 @@ public class TournoiRepositoryImpl implements TournoiRepository {
         return tournoiDao.update(tournoi);
     }
 
-    @Override
-    public boolean delete(Long id) {
-        return tournoiDao.delete(id);
-    }
 
     @Override
     public boolean addEquipe(Long idTournoi, Long idEquipe) {

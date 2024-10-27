@@ -75,6 +75,37 @@ public class InputValidator {
                 LoggerUtil.error("Invalid input: Unable to parse duration. Please use the format HH:MM:SS.", e);
             }
         }
+
     }
 
+    public static int validateAgeInput() {
+        final int MIN_AGE = 16;
+        final int MAX_AGE = 100;
+
+        while (true) {
+            LoggerUtil.info("Enter an age (" + MIN_AGE + "-" + MAX_AGE + "): ");
+            try {
+                int input = Integer.parseInt(scanner.nextLine().trim());
+                if (input >= MIN_AGE && input <= MAX_AGE) {
+                    return input;
+                } else {
+                    LoggerUtil.error("Invalid input: Age must be between " + MIN_AGE + " and " + MAX_AGE);
+                }
+            } catch (NumberFormatException e) {
+                LoggerUtil.error("Invalid input: Not a number", e);
+            }
+        }
+    }
+
+    public static int validateIntInput() {
+        while (true) {
+            LoggerUtil.info("Enter an int: ");
+            try {
+                return Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                LoggerUtil.error("Invalid input: Not a valid integer", e);
+                LoggerUtil.info("Please enter a valid integer.");
+            }
+        }
+    }
 }

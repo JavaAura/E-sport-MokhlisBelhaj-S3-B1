@@ -34,10 +34,7 @@ public class TournoiServiceImpl implements TournoiService {
         return tournoiRepository.update(tournoi);
     }
 
-    @Override
-    public boolean delete(Long id) {
-        return tournoiRepository.delete(id);
-    }
+  
 
     @Override
     public boolean addEquipeToTournoi(Long tournoiId, Long equipeId) {

@@ -21,7 +21,10 @@ public class EquipeDaoImpl implements EquipeDao {
         EntityManager entityManager = null;
         try {
             entityManager = JpaUtil.getEntityManager();
-            return entityManager.createQuery("SELECT e FROM Equipe e", Equipe.class).getResultList();
+            return entityManager.createQuery(
+                "SELECT DISTINCT e FROM Equipe e LEFT JOIN FETCH e.joueurs", 
+                Equipe.class
+            ).getResultList();
         } catch (Exception e) {
             LoggerUtil.error("Error in findAll: " + e.getMessage());
             return new ArrayList<>();
@@ -35,7 +38,14 @@ public class EquipeDaoImpl implements EquipeDao {
         EntityManager entityManager = null;
         try {
             entityManager = JpaUtil.getEntityManager();
-            return Optional.ofNullable(entityManager.find(Equipe.class, id));
+            // Utilisation d'une requête JPQL avec JOIN FETCH pour charger les joueurs
+            String jpql = "SELECT e FROM Equipe e LEFT JOIN FETCH e.joueurs WHERE e.id = :id";
+            Equipe equipe = entityManager.createQuery(jpql, Equipe.class)
+                    .setParameter("id", id)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+            return Optional.ofNullable(equipe);
         } catch (Exception e) {
             LoggerUtil.error("Error in findById: " + e.getMessage());
             return Optional.empty();
@@ -84,26 +94,4 @@ public class EquipeDaoImpl implements EquipeDao {
         }
     }
 
-    @Override
-    public boolean delete(Long id) {
-        EntityManager entityManager = null;
-        try {
-            entityManager = JpaUtil.getEntityManager();
-            entityManager.getTransaction().begin();
-            Equipe equipe = entityManager.find(Equipe.class, id);
-            if (equipe != null) {
-                entityManager.remove(equipe);
-            }
-            entityManager.getTransaction().commit();
-            return true;
-        } catch (Exception e) {
-            LoggerUtil.error("Error in delete: " + e.getMessage());
-            if (entityManager != null && entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            return false;
-        } finally {
-            JpaUtil.closeEntityManager(entityManager);
-        }
-    }
 }

@@ -10,6 +10,5 @@ public interface JeuRepository {
     Optional<Jeu> findById(Long id);
     boolean create(Jeu jeu);
     boolean update(Jeu jeu);
-    boolean delete(Long id);
 
 }

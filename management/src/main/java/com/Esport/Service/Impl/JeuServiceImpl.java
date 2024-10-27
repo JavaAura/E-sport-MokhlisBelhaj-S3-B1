@@ -35,10 +35,7 @@ public class JeuServiceImpl implements JeuService{
         return jeuRepository.update(jeu);
     }
 
-    @Override
-    public boolean delete(Long id) {
-           return jeuRepository.delete(id);
-    }
+   
 
 }
 

@@ -12,6 +12,4 @@ public interface JoueurService {
     public boolean create(Joueur joueur);
     public boolean update(Joueur joueur);
     public boolean delete(Long id);
-    
-    
 }

@@ -56,8 +56,7 @@ public class Tournoi {
 	@JoinColumn(name = "jeu_id")
 	private Jeu jeu;
 
-	@ManyToMany
-	@JoinTable(name = "tournoi_equipe", joinColumns = @JoinColumn(name = "tournoi_id"), inverseJoinColumns = @JoinColumn(name = "equipe_id"))
+	@OneToMany(mappedBy = "tournoi")
 	private List<Equipe> equipes;
 
 	// constructeur with all attributes
